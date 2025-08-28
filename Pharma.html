@@ -1,0 +1,2641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PharmaSys - Pharmacy Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style id="app-style">
+        :root {
+            --primary: #0d6efd;
+            --secondary: #6c757d;
+            --success: #198754;
+            --info: #0dcaf0;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --pharma-primary: #1e88e5;
+            --pharma-secondary: #26c6da;
+            --pharma-success: #43a047;
+            --pharma-light: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .login-card {
+            width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+            padding: 2rem;
+            background-color: white;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo {
+            margin-bottom: 1rem;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 60px;
+            background-color: var(--dark);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.75);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar .nav-link i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 60px 20px 20px;
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+
+        .topbar {
+            height: 60px;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 999;
+            background-color: white;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .user-info {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            background-color: var(--pharma-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-card {
+            border-left: 4px solid var(--danger);
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+            color: var(--danger);
+            margin-right: 1rem;
+        }
+
+        .dashboard-stat-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            height: 100%;
+            transition: transform 0.2s;
+        }
+
+        .dashboard-stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .dashboard-stat-card .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-stat-card .title {
+            color: var(--secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .dashboard-stat-card .value {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+
+        .table-responsive {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 1rem;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-header {
+            background-color: var(--pharma-primary);
+            color: white;
+            border-radius: 6px 6px 0 0;
+        }
+
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+        }
+
+        .page-content {
+            display: none;
+        }
+
+        #login-page {
+            display: block;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        .card-stat {
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+        }
+
+        .card-stat-1 {
+            background: linear-gradient(45deg, #1e88e5, #42a5f5);
+        }
+
+        .card-stat-2 {
+            background: linear-gradient(45deg, #26c6da, #80deea);
+        }
+
+        .card-stat-3 {
+            background: linear-gradient(45deg, #66bb6a, #9ccc65);
+        }
+
+        .card-stat-4 {
+            background: linear-gradient(45deg, #ec407a, #f48fb1);
+        }
+
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            margin-right: 0.25rem;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1051;
+        }
+
+        .pagination {
+            margin-bottom: 0;
+        }
+
+        /* Loading spinner */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1060;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s 0.2s, opacity 0.2s;
+        }
+
+        .loading-overlay.show {
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 0.2s;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="login-page" class="page-content">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="login-logo">
+                        <i class="fas fa-clinic-medical fa-3x text-primary"></i>
+                    </div>
+                    <h3>PharmaSys</h3>
+                    <p class="text-muted">Pharmacy Management System</p>
+                </div>
+                <form id="login-form">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
+                        </div>
+                        <div class="invalid-feedback">Please enter a valid username</div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                        </div>
+                        <div class="invalid-feedback">Please enter your password</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application (shown after login) -->
+    <div id="app-page" class="page-content">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="text-center mb-4 pt-3">
+                <i class="fas fa-clinic-medical fa-2x text-primary"></i>
+                <h5 class="text-white mt-2 mb-0">PharmaSys</h5>
+                <p class="text-muted small">Pharmacy Management</p>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="javascript:void(0)" class="nav-link active" data-page="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)" class="nav-link" data-page="inventory">
+                        <i class="fas fa-pills"></i> Inventory
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)" class="nav-link" data-page="prescriptions">
+                        <i class="fas fa-prescription"></i> Prescriptions
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)" class="nav-link" data-page="customers">
+                        <i class="fas fa-users"></i> Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)" class="nav-link" data-page="doctors">
+                        <i class="fas fa-user-md"></i> Doctors
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)" class="nav-link" data-page="suppliers">
+                        <i class="fas fa-truck"></i> Suppliers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)" class="nav-link" data-page="reports">
+                        <i class="fas fa-chart-bar"></i> Reports
+                    </a>
+                </li>
+                <li class="nav-item mt-3">
+                    <a href="javascript:void(0)" class="nav-link text-danger" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Topbar -->
+        <div class="topbar">
+            <button class="btn btn-sm" id="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <div class="small text-muted" id="user-role">Admin</div>
+                    <div id="user-name">John Doe</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Dashboard Page -->
+            <div id="dashboard-content" class="content-section active">
+                <div class="content-header">
+                    <h4 class="mb-0"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h4>
+                    <div>
+                        <span class="text-muted me-2">Last updated:</span>
+                        <span id="last-updated">Today at 08:30 AM</span>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card-stat card-stat-1">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="text-white-50">Total Inventory</h6>
+                                    <h3 class="mb-0">2,543</h3>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-pills fa-2x opacity-50"></i>
+                                </div>
+                            </div>
+                            <div class="mt-2 small">
+                                <span class="text-white-50">Value:</span>
+                                <span class="text-white">$125,430.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card-stat card-stat-2">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="text-white-50">Prescriptions</h6>
+                                    <h3 class="mb-0">187</h3>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-prescription fa-2x opacity-50"></i>
+                                </div>
+                            </div>
+                            <div class="mt-2 small">
+                                <span class="text-white-50">This month:</span>
+                                <span class="text-white">+12% <i class="fas fa-arrow-up"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card-stat card-stat-3">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="text-white-50">Customers</h6>
+                                    <h3 class="mb-0">1,258</h3>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-users fa-2x opacity-50"></i>
+                                </div>
+                            </div>
+                            <div class="mt-2 small">
+                                <span class="text-white-50">Active:</span>
+                                <span class="text-white">847 (67%)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card-stat card-stat-4">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="text-white-50">Low Stock</h6>
+                                    <h3 class="mb-0">24</h3>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-exclamation-triangle fa-2x opacity-50"></i>
+                                </div>
+                            </div>
+                            <div class="mt-2 small">
+                                <span class="text-white-50">Need reorder:</span>
+                                <span class="text-white">Urgent</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Low Stock Alerts</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="alert-card">
+                                    <div class="alert-icon">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Amoxicillin 500mg</h6>
+                                        <p class="mb-0 text-muted small">Current stock: 10 units (Min: 50)</p>
+                                    </div>
+                                    <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary ms-auto">Reorder</a>
+                                </div>
+                                <div class="alert-card">
+                                    <div class="alert-icon">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Lisinopril 20mg</h6>
+                                        <p class="mb-0 text-muted small">Current stock: 15 units (Min: 30)</p>
+                                    </div>
+                                    <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary ms-auto">Reorder</a>
+                                </div>
+                                <div class="alert-card">
+                                    <div class="alert-icon">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Metformin 1000mg</h6>
+                                        <p class="mb-0 text-muted small">Current stock: 8 units (Min: 25)</p>
+                                    </div>
+                                    <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary ms-auto">Reorder</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Recent Prescriptions</h5>
+                                <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Customer</th>
+                                                <th>Doctor</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>#PRE0023</td>
+                                                <td>Sarah Johnson</td>
+                                                <td>Dr. Miller</td>
+                                                <td>Apr 12, 2025</td>
+                                            </tr>
+                                            <tr>
+                                                <td>#PRE0022</td>
+                                                <td>Michael Brown</td>
+                                                <td>Dr. Garcia</td>
+                                                <td>Apr 11, 2025</td>
+                                            </tr>
+                                            <tr>
+                                                <td>#PRE0021</td>
+                                                <td>Emily Wilson</td>
+                                                <td>Dr. Lee</td>
+                                                <td>Apr 10, 2025</td>
+                                            </tr>
+                                            <tr>
+                                                <td>#PRE0020</td>
+                                                <td>John Smith</td>
+                                                <td>Dr. Johnson</td>
+                                                <td>Apr 10, 2025</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Expiring Medications</h5>
+                                <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Medication</th>
+                                                <th>Quantity</th>
+                                                <th>Expires</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Atorvastatin 20mg</td>
+                                                <td>45</td>
+                                                <td>May 15, 2025</td>
+                                                <td><span class="badge bg-warning">30 days</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Cetirizine 10mg</td>
+                                                <td>30</td>
+                                                <td>May 20, 2025</td>
+                                                <td><span class="badge bg-warning">35 days</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Omeprazole 40mg</td>
+                                                <td>28</td>
+                                                <td>Jun 5, 2025</td>
+                                                <td><span class="badge bg-info">50 days</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Ibuprofen 600mg</td>
+                                                <td>60</td>
+                                                <td>Jun 10, 2025</td>
+                                                <td><span class="badge bg-info">55 days</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Page -->
+            <div id="inventory-content" class="content-section">
+                <div class="content-header">
+                    <h4 class="mb-0"><i class="fas fa-pills me-2"></i>Inventory Management</h4>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMedicationModal">
+                        <i class="fas fa-plus me-2"></i>Add Medication
+                    </button>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    <input type="text" class="form-control" placeholder="Search medications...">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select">
+                                    <option>All Categories</option>
+                                    <option>Antibiotics</option>
+                                    <option>Pain Relievers</option>
+                                    <option>Cardiovascular</option>
+                                    <option>Respiratory</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select">
+                                    <option>All Suppliers</option>
+                                    <option>PharmaCorp Inc.</option>
+                                    <option>MediSource Ltd.</option>
+                                    <option>Global Pharma</option>
+                                    <option>Healthcare Supplies</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Medication Name</th>
+                                        <th>Dosage</th>
+                                        <th>Quantity</th>
+                                        <th>Expiration</th>
+                                        <th>Price</th>
+                                        <th>Supplier</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>MED001</td>
+                                        <td>Amoxicillin</td>
+                                        <td>500mg</td>
+                                        <td>100</td>
+                                        <td>Dec 31, 2025</td>
+                                        <td>$0.50</td>
+                                        <td>PharmaCorp Inc.</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editMedicationModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>MED002</td>
+                                        <td>Lisinopril</td>
+                                        <td>10mg</td>
+                                        <td>75</td>
+                                        <td>Nov 15, 2025</td>
+                                        <td>$0.35</td>
+                                        <td>MediSource Ltd.</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editMedicationModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>MED003</td>
+                                        <td>Metformin</td>
+                                        <td>850mg</td>
+                                        <td>120</td>
+                                        <td>Oct 20, 2025</td>
+                                        <td>$0.25</td>
+                                        <td>Global Pharma</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editMedicationModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>MED004</td>
+                                        <td>Atorvastatin</td>
+                                        <td>20mg</td>
+                                        <td>90</td>
+                                        <td>Sep 05, 2025</td>
+                                        <td>$1.20</td>
+                                        <td>Healthcare Supplies</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editMedicationModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>MED005</td>
+                                        <td>Ibuprofen</td>
+                                        <td>200mg</td>
+                                        <td>200</td>
+                                        <td>Aug 15, 2025</td>
+                                        <td>$0.15</td>
+                                        <td>MediSource Ltd.</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editMedicationModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>Showing 1 to 5 of 25 entries</div>
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="javascript:void(0)">Previous</a>
+                                    </li>
+                                    <li class="page-item active">
+                                        <a class="page-link" href="javascript:void(0)">1</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)">2</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)">3</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prescriptions Page -->
+            <div id="prescriptions-content" class="content-section">
+                <div class="content-header">
+                    <h4 class="mb-0"><i class="fas fa-prescription me-2"></i>Prescription Management</h4>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPrescriptionModal">
+                        <i class="fas fa-plus me-2"></i>New Prescription
+                    </button>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12 mb-4">
+                        <div class="form-container">
+                            <h5 class="mb-4">Create New Prescription</h5>
+                            <form>
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Select Customer</label>
+                                        <select class="form-select">
+                                            <option selected disabled>Choose a customer...</option>
+                                            <option>Sarah Johnson</option>
+                                            <option>Michael Brown</option>
+                                            <option>Emily Wilson</option>
+                                            <option>John Smith</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Select Doctor</label>
+                                        <select class="form-select">
+                                            <option selected disabled>Choose a doctor...</option>
+                                            <option>Dr. Miller</option>
+                                            <option>Dr. Garcia</option>
+                                            <option>Dr. Lee</option>
+                                            <option>Dr. Johnson</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Select Medication</label>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 40%">Medication</th>
+                                                    <th style="width: 20%">Dosage</th>
+                                                    <th style="width: 15%">Quantity</th>
+                                                    <th style="width: 15%">Price</th>
+                                                    <th style="width: 10%">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="prescription-items">
+                                                <tr>
+                                                    <td>
+                                                        <select class="form-select">
+                                                            <option selected disabled>Select medication...</option>
+                                                            <option>Amoxicillin</option>
+                                                            <option>Lisinopril</option>
+                                                            <option>Metformin</option>
+                                                            <option>Atorvastatin</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-select">
+                                                            <option selected disabled>Select dosage...</option>
+                                                            <option>500mg</option>
+                                                            <option>250mg</option>
+                                                            <option>100mg</option>
+                                                            <option>50mg</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" class="form-control" value="1" min="1">
+                                                    </td>
+                                                    <td>$0.00</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-sm btn-danger">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-outline-primary mt-2">
+                                        <i class="fas fa-plus me-1"></i> Add Medication
+                                    </button>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Notes</label>
+                                        <textarea class="form-control" rows="3" placeholder="Add prescription notes..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="text-end">
+                                    <button type="button" class="btn btn-secondary me-2">Clear</button>
+                                    <button type="submit" class="btn btn-primary">Submit Prescription</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Prescription History</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    <input type="text" class="form-control" placeholder="Search prescriptions...">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select">
+                                    <option>All Customers</option>
+                                    <option>Sarah Johnson</option>
+                                    <option>Michael Brown</option>
+                                    <option>Emily Wilson</option>
+                                    <option>John Smith</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-outline-primary w-100">Filter</button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Prescription ID</th>
+                                        <th>Customer</th>
+                                        <th>Doctor</th>
+                                        <th>Date Issued</th>
+                                        <th>Medications</th>
+                                        <th>Total</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#PRE0023</td>
+                                        <td>Sarah Johnson</td>
+                                        <td>Dr. Miller</td>
+                                        <td>Apr 12, 2025</td>
+                                        <td>2</td>
+                                        <td>$32.50</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-success btn-action" title="Print">
+                                                <i class="fas fa-print"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#PRE0022</td>
+                                        <td>Michael Brown</td>
+                                        <td>Dr. Garcia</td>
+                                        <td>Apr 11, 2025</td>
+                                        <td>1</td>
+                                        <td>$15.75</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-success btn-action" title="Print">
+                                                <i class="fas fa-print"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#PRE0021</td>
+                                        <td>Emily Wilson</td>
+                                        <td>Dr. Lee</td>
+                                        <td>Apr 10, 2025</td>
+                                        <td>3</td>
+                                        <td>$48.25</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-success btn-action" title="Print">
+                                                <i class="fas fa-print"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>Showing 1 to 3 of 15 entries</div>
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="javascript:void(0)">Previous</a>
+                                    </li>
+                                    <li class="page-item active">
+                                        <a class="page-link" href="javascript:void(0)">1</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)">2</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)">3</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customers Page -->
+            <div id="customers-content" class="content-section">
+                <div class="content-header">
+                    <h4 class="mb-0"><i class="fas fa-users me-2"></i>Customer Management</h4>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+                        <i class="fas fa-plus me-2"></i>Add Customer
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    <input type="text" class="form-control" placeholder="Search customers by name, email or phone...">
+                                    <button class="btn btn-outline-primary">Search</button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-select">
+                                    <option value="">All Customers</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Prescriptions</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>CUST001</td>
+                                        <td>Sarah Johnson</td>
+                                        <td>(555) 123-4567</td>
+                                        <td>sarah.j@example.com</td>
+                                        <td>5</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editCustomerModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>CUST002</td>
+                                        <td>Michael Brown</td>
+                                        <td>(555) 234-5678</td>
+                                        <td>mbrown@example.com</td>
+                                        <td>3</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editCustomerModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>CUST003</td>
+                                        <td>Emily Wilson</td>
+                                        <td>(555) 345-6789</td>
+                                        <td>emily.w@example.com</td>
+                                        <td>7</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editCustomerModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>CUST004</td>
+                                        <td>John Smith</td>
+                                        <td>(555) 456-7890</td>
+                                        <td>jsmith@example.com</td>
+                                        <td>2</td>
+                                        <td><span class="badge bg-secondary">Inactive</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editCustomerModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>CUST005</td>
+                                        <td>Jennifer Davis</td>
+                                        <td>(555) 567-8901</td>
+                                        <td>jen.davis@example.com</td>
+                                        <td>4</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editCustomerModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>Showing 1 to 5 of 20 entries</div>
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="javascript:void(0)">Previous</a>
+                                    </li>
+                                    <li class="page-item active">
+                                        <a class="page-link" href="javascript:void(0)">1</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)">2</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)">3</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)">4</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Doctors Page -->
+            <div id="doctors-content" class="content-section">
+                <div class="content-header">
+                    <h4 class="mb-0"><i class="fas fa-user-md me-2"></i>Doctor Management</h4>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDoctorModal">
+                        <i class="fas fa-plus me-2"></i>Add Doctor
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    <input type="text" class="form-control" placeholder="Search doctors...">
+                                    <button class="btn btn-outline-primary">Search</button>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select">
+                                    <option>All Specialties</option>
+                                    <option>Cardiologist</option>
+                                    <option>Dermatologist</option>
+                                    <option>General Physician</option>
+                                    <option>Neurologist</option>
+                                    <option>Pediatrician</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select">
+                                    <option>Sort by</option>
+                                    <option>Name (A-Z)</option>
+                                    <option>Name (Z-A)</option>
+                                    <option>Specialty</option>
+                                    <option>Most Prescriptions</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Specialty</th>
+                                        <th>Contact Number</th>
+                                        <th>Prescriptions</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>DOC001</td>
+                                        <td>Dr. Miller</td>
+                                        <td>Cardiologist</td>
+                                        <td>(555) 111-2222</td>
+                                        <td>15</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editDoctorModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>DOC002</td>
+                                        <td>Dr. Garcia</td>
+                                        <td>General Physician</td>
+                                        <td>(555) 222-3333</td>
+                                        <td>23</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editDoctorModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>DOC003</td>
+                                        <td>Dr. Lee</td>
+                                        <td>Dermatologist</td>
+                                        <td>(555) 333-4444</td>
+                                        <td>8</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editDoctorModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>DOC004</td>
+                                        <td>Dr. Johnson</td>
+                                        <td>Neurologist</td>
+                                        <td>(555) 444-5555</td>
+                                        <td>12</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editDoctorModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>DOC005</td>
+                                        <td>Dr. Wilson</td>
+                                        <td>Pediatrician</td>
+                                        <td>(555) 555-6666</td>
+                                        <td>18</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editDoctorModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>Showing 1 to 5 of 15 entries</div>
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="javascript:void(0)">Previous</a>
+                                    </li>
+                                    <li class="page-item active">
+                                        <a class="page-link" href="javascript:void(0)">1</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)">2</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)">3</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suppliers Page -->
+            <div id="suppliers-content" class="content-section">
+                <div class="content-header">
+                    <h4 class="mb-0"><i class="fas fa-truck me-2"></i>Supplier Management</h4>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSupplierModal">
+                        <i class="fas fa-plus me-2"></i>Add Supplier
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    <input type="text" class="form-control" placeholder="Search suppliers...">
+                                    <button class="btn btn-outline-primary">Search</button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-select">
+                                    <option>All Suppliers</option>
+                                    <option>Active</option>
+                                    <option>Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Supplier Name</th>
+                                        <th>Contact Number</th>
+                                        <th>Email</th>
+                                        <th>Products</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>SUPP001</td>
+                                        <td>PharmaCorp Inc.</td>
+                                        <td>(555) 111-0000</td>
+                                        <td>contact@pharmacorp.com</td>
+                                        <td>120</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editSupplierModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>SUPP002</td>
+                                        <td>MediSource Ltd.</td>
+                                        <td>(555) 222-0000</td>
+                                        <td>info@medisource.com</td>
+                                        <td>85</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editSupplierModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>SUPP003</td>
+                                        <td>Global Pharma</td>
+                                        <td>(555) 333-0000</td>
+                                        <td>sales@globalpharma.com</td>
+                                        <td>65</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editSupplierModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>SUPP004</td>
+                                        <td>Healthcare Supplies</td>
+                                        <td>(555) 444-0000</td>
+                                        <td>orders@healthsupplies.com</td>
+                                        <td>40</td>
+                                        <td><span class="badge bg-secondary">Inactive</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#editSupplierModal" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-action" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>Showing 1 to 4 of 8 entries</div>
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="javascript:void(0)">Previous</a>
+                                    </li>
+                                    <li class="page-item active">
+                                        <a class="page-link" href="javascript:void(0)">1</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)">2</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Page -->
+            <div id="reports-content" class="content-section">
+                <div class="content-header">
+                    <h4 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Reports</h4>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="mb-4">Generate Reports</h5>
+                                <form>
+                                    <div class="row mb-4">
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">Report Type</label>
+                                            <select class="form-select">
+                                                <option selected disabled>Select report type...</option>
+                                                <option>Inventory Status</option>
+                                                <option>Sales Report</option>
+                                                <option>Prescription Trends</option>
+                                                <option>Customer Activity</option>
+                                                <option>Low Stock Items</option>
+                                                <option>Expiring Medications</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">Date Range</label>
+                                            <div class="input-group">
+                                                <input type="date" class="form-control">
+                                                <span class="input-group-text">to</span>
+                                                <input type="date" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">Format</label>
+                                            <select class="form-select">
+                                                <option>PDF</option>
+                                                <option>Excel</option>
+                                                <option>CSV</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Additional Filters</label>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="includeCharts">
+                                                        <label class="form-check-label" for="includeCharts">Include Charts</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="includeSummary">
+                                                        <label class="form-check-label" for="includeSummary">Include Summary</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="detailedView">
+                                                        <label class="form-check-label" for="detailedView">Detailed View</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="compareLastPeriod">
+                                                        <label class="form-check-label" for="compareLastPeriod">Compare with Last Period</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Comments (Optional)</label>
+                                            <textarea class="form-control" rows="3" placeholder="Add any additional notes for the report..."></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-end">
+                                        <button type="button" class="btn btn-secondary me-2">Reset</button>
+                                        <button type="button" class="btn btn-success" id="generateReportBtn">
+                                            <i class="fas fa-file-alt me-2"></i>Generate Report
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Recent Reports</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Report ID</th>
+                                        <th>Type</th>
+                                        <th>Date Range</th>
+                                        <th>Generated By</th>
+                                        <th>Date Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>REP0015</td>
+                                        <td>Inventory Status</td>
+                                        <td>Apr 1 - Apr 15, 2025</td>
+                                        <td>John Doe</td>
+                                        <td>Apr 16, 2025</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-success btn-action" title="Download">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-secondary btn-action" title="Print">
+                                                <i class="fas fa-print"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>REP0014</td>
+                                        <td>Sales Report</td>
+                                        <td>Mar 15 - Apr 15, 2025</td>
+                                        <td>Jane Smith</td>
+                                        <td>Apr 16, 2025</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-success btn-action" title="Download">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-secondary btn-action" title="Print">
+                                                <i class="fas fa-print"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>REP0013</td>
+                                        <td>Prescription Trends</td>
+                                        <td>Jan 1 - Mar 31, 2025</td>
+                                        <td>John Doe</td>
+                                        <td>Apr 5, 2025</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-success btn-action" title="Download">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-secondary btn-action" title="Print">
+                                                <i class="fas fa-print"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>REP0012</td>
+                                        <td>Low Stock Items</td>
+                                        <td>Apr 1 - Apr 10, 2025</td>
+                                        <td>Jane Smith</td>
+                                        <td>Apr 10, 2025</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-action" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-success btn-action" title="Download">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-secondary btn-action" title="Print">
+                                                <i class="fas fa-print"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add Medication Modal -->
+    <div class="modal fade" id="addMedicationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Medication</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addMedicationForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Medication Name</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Dosage</label>
+                                <input type="text" class="form-control" placeholder="e.g. 500mg" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Quantity</label>
+                                <input type="number" class="form-control" min="0" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" min="0" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Expiration Date</label>
+                                <input type="date" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Supplier</label>
+                            <select class="form-select" required>
+                                <option selected disabled value="">Select supplier...</option>
+                                <option>PharmaCorp Inc.</option>
+                                <option>MediSource Ltd.</option>
+                                <option>Global Pharma</option>
+                                <option>Healthcare Supplies</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveMedicationBtn">Save Medication</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Medication Modal -->
+    <div class="modal fade" id="editMedicationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Medication</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editMedicationForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Medication Name</label>
+                                <input type="text" class="form-control" value="Amoxicillin" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Dosage</label>
+                                <input type="text" class="form-control" value="500mg" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Quantity</label>
+                                <input type="number" class="form-control" value="100" min="0" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" value="0.50" min="0" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Expiration Date</label>
+                                <input type="date" class="form-control" value="2025-12-31" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Supplier</label>
+                            <select class="form-select" required>
+                                <option>PharmaCorp Inc.</option>
+                                <option>MediSource Ltd.</option>
+                                <option>Global Pharma</option>
+                                <option>Healthcare Supplies</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" rows="3">Antibiotic used to treat a number of bacterial infections.</textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="updateMedicationBtn">Update Medication</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Customer Modal -->
+    <div class="modal fade" id="addCustomerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Customer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCustomerForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveCustomerBtn">Save Customer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Customer Modal -->
+    <div class="modal fade" id="editCustomerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Customer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editCustomerForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" value="Sarah" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" value="Johnson" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" value="(555) 123-4567" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" value="sarah.j@example.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" rows="2">123 Main St, Anytown, USA</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select">
+                                <option selected value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="updateCustomerBtn">Update Customer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Doctor Modal -->
+    <div class="modal fade" id="addDoctorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Doctor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addDoctorForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Specialty</label>
+                            <select class="form-select" required>
+                                <option selected disabled value="">Select specialty...</option>
+                                <option>Cardiologist</option>
+                                <option>Dermatologist</option>
+                                <option>General Physician</option>
+                                <option>Neurologist</option>
+                                <option>Pediatrician</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Contact Number</label>
+                            <input type="tel" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveDoctorBtn">Save Doctor</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Doctor Modal -->
+    <div class="modal fade" id="editDoctorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Doctor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editDoctorForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" value="Dr." required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" value="Miller" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Specialty</label>
+                            <select class="form-select" required>
+                                <option>Cardiologist</option>
+                                <option>Dermatologist</option>
+                                <option>General Physician</option>
+                                <option>Neurologist</option>
+                                <option>Pediatrician</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Contact Number</label>
+                            <input type="tel" class="form-control" value="(555) 111-2222" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" value="dr.miller@example.com">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="updateDoctorBtn">Update Doctor</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Supplier Modal -->
+    <div class="modal fade" id="addSupplierModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Supplier</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addSupplierForm">
+                        <div class="mb-3">
+                            <label class="form-label">Supplier Name</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Contact Number</label>
+                            <input type="tel" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Website</label>
+                            <input type="url" class="form-control" placeholder="https://">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveSupplierBtn">Save Supplier</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Supplier Modal -->
+    <div class="modal fade" id="editSupplierModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Supplier</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editSupplierForm">
+                        <div class="mb-3">
+                            <label class="form-label">Supplier Name</label>
+                            <input type="text" class="form-control" value="PharmaCorp Inc." required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Contact Number</label>
+                            <input type="tel" class="form-control" value="(555) 111-0000" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" value="contact@pharmacorp.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" rows="2">500 Corporate Way, Business Park, CA 90001</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Website</label>
+                            <input type="url" class="form-control" value="https://www.pharmacorp.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select">
+                                <option selected value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="updateSupplierBtn">Update Supplier</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Prescription Modal -->
+    <div class="modal fade" id="addPrescriptionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Prescription</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addPrescriptionForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Customer</label>
+                                <select class="form-select" required>
+                                    <option selected disabled value="">Select customer...</option>
+                                    <option>Sarah Johnson</option>
+                                    <option>Michael Brown</option>
+                                    <option>Emily Wilson</option>
+                                    <option>John Smith</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Doctor</label>
+                                <select class="form-select" required>
+                                    <option selected disabled value="">Select doctor...</option>
+                                    <option>Dr. Miller</option>
+                                    <option>Dr. Garcia</option>
+                                    <option>Dr. Lee</option>
+                                    <option>Dr. Johnson</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Date Issued</label>
+                            <input type="date" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Medications</label>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Medication</th>
+                                            <th>Dosage</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <select class="form-select">
+                                                    <option selected disabled>Select medication...</option>
+                                                    <option>Amoxicillin</option>
+                                                    <option>Lisinopril</option>
+                                                    <option>Metformin</option>
+                                                    <option>Atorvastatin</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-select">
+                                                    <option selected disabled>Select dosage...</option>
+                                                    <option>500mg</option>
+                                                    <option>250mg</option>
+                                                    <option>100mg</option>
+                                                    <option>50mg</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control" min="1" value="1">
+                                            </td>
+                                            <td>$0.00</td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-primary mt-2">
+                                <i class="fas fa-plus me-1"></i> Add Medication
+                            </button>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="savePrescriptionBtn">Save Prescription</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container">
+        <div class="toast align-items-center text-white bg-success border-0" id="successToast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span id="successToastMessage">Operation completed successfully!</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="toast align-items-center text-white bg-danger border-0" id="errorToast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <span id="errorToastMessage">An error occurred. Please try again.</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script id="app-script">
+        $(document).ready(function() {
+            // Handle login
+            $("#login-form").submit(function(e) {
+                e.preventDefault();
+                
+                // Show loading spinner
+                $("#loadingOverlay").addClass("show");
+                
+                // Get form values
+                const username = $("#username").val();
+                const password = $("#password").val();
+                
+                // Validate form
+                let isValid = true;
+                if (!username) {
+                    $("#username").addClass("is-invalid");
+                    isValid = false;
+                } else {
+                    $("#username").removeClass("is-invalid");
+                }
+                
+                if (!password) {
+                    $("#password").addClass("is-invalid");
+                    isValid = false;
+                } else {
+                    $("#password").removeClass("is-invalid");
+                }
+                
+                if (!isValid) {
+                    $("#loadingOverlay").removeClass("show");
+                    return;
+                }
+                
+                // Simulate API call
+                setTimeout(function() {
+                    // For demo purposes, we'll accept any login
+                    // Store user info in localStorage
+                    const userInfo = {
+                        id: 1,
+                        name: "John Doe",
+                        role: "Admin",
+                        token: "demo_token_12345"
+                    };
+                    
+                    localStorage.setItem("pharmaUserInfo", JSON.stringify(userInfo));
+                    
+                    // Hide login page, show app
+                    $("#login-page").hide();
+                    $("#app-page").show();
+                    
+                    // Update user info in the UI
+                    $("#user-name").text(userInfo.name);
+                    $("#user-role").text(userInfo.role);
+                    
+                    // Hide loading spinner
+                    $("#loadingOverlay").removeClass("show");
+                }, 1000);
+            });
+            
+            // Handle logout
+            $("#logout-btn").click(function() {
+                // Show loading spinner
+                $("#loadingOverlay").addClass("show");
+                
+                // Simulate API call
+                setTimeout(function() {
+                    // Clear user info from localStorage
+                    localStorage.removeItem("pharmaUserInfo");
+                    
+                    // Hide app, show login page
+                    $("#app-page").hide();
+                    $("#login-page").show();
+                    
+                    // Reset login form
+                    $("#login-form")[0].reset();
+                    
+                    // Hide loading spinner
+                    $("#loadingOverlay").removeClass("show");
+                }, 1000);
+            });
+            
+            // Navigation menu click handling
+            $(".nav-link[data-page]").click(function() {
+                const targetPage = $(this).data("page");
+                
+                // Update active navigation link
+                $(".nav-link").removeClass("active");
+                $(this).addClass("active");
+                
+                // Hide all content sections and show the target one
+                $(".content-section").removeClass("active");
+                $("#" + targetPage + "-content").addClass("active");
+            });
+            
+            // Sidebar toggle for responsive design
+            $("#sidebar-toggle").click(function() {
+                $(".sidebar").toggleClass("collapsed");
+                $(".main-content").toggleClass("expanded");
+                $(".topbar").toggleClass("expanded");
+            });
+            
+            // Handle form submissions with validation
+            
+            // Save Medication Button
+            $("#saveMedicationBtn").click(function() {
+                // Show loading spinner
+                $("#loadingOverlay").addClass("show");
+                
+                // Validate form (simplified for demo)
+                const form = $("#addMedicationForm")[0];
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    $("#loadingOverlay").removeClass("show");
+                    return;
+                }
+                
+                // Simulate API call
+                setTimeout(function() {
+                    // Hide modal
+                    $("#addMedicationModal").modal("hide");
+                    
+                    // Reset form
+                    $("#addMedicationForm")[0].reset();
+                    
+                    // Show success toast
+                    showToast("success", "Medication added successfully!");
+                    
+                    // Hide loading spinner
+                    $("#loadingOverlay").removeClass("show");
+                }, 1000);
+            });
+            
+            // Update Medication Button
+            $("#updateMedicationBtn").click(function() {
+                // Show loading spinner
+                $("#loadingOverlay").addClass("show");
+                
+                // Validate form (simplified for demo)
+                const form = $("#editMedicationForm")[0];
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    $("#loadingOverlay").removeClass("show");
+                    return;
+                }
+                
+                // Simulate API call
+                setTimeout(function() {
+                    // Hide modal
+                    $("#editMedicationModal").modal("hide");
+                    
+                    // Show success toast
+                    showToast("success", "Medication updated successfully!");
+                    
+                    // Hide loading spinner
+                    $("#loadingOverlay").removeClass("show");
+                }, 1000);
+            });
+            
+            // Save Customer Button
+            $("#saveCustomerBtn").click(function() {
+                // Show loading spinner
+                $("#loadingOverlay").addClass("show");
+                
+                // Validate form (simplified for demo)
+                const form = $("#addCustomerForm")[0];
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    $("#loadingOverlay").removeClass("show");
+                    return;
+                }
+                
+                // Simulate API call
+                setTimeout(function() {
+                    // Hide modal
+                    $("#addCustomerModal").modal("hide");
+                    
+                    // Reset form
+                    $("#addCustomerForm")[0].reset();
+                    
+                    // Show success toast
+                    showToast("success", "Customer added successfully!");
+                    
+                    // Hide loading spinner
+                    $("#loadingOverlay").removeClass("show");
+                }, 1000);
+            });
+            
+            // Update Customer Button
+            $("#updateCustomerBtn").click(function() {
+                // Show loading spinner
+                $("#loadingOverlay").addClass("show");
+                
+                // Validate form (simplified for demo)
+                const form = $("#editCustomerForm")[0];
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    $("#loadingOverlay").removeClass("show");
+                    return;
+                }
+                
+                // Simulate API call
+                setTimeout(function() {
+                    // Hide modal
+                    $("#editCustomerModal").modal("hide");
+                    
+                    // Show success toast
+                    showToast("success", "Customer updated successfully!");
+                    
+                    // Hide loading spinner
+                    $("#loadingOverlay").removeClass("show");
+                }, 1000);
+            });
+            
+            // Save Doctor Button
+            $("#saveDoctorBtn").click(function() {
+                // Show loading spinner
+                $("#loadingOverlay").addClass("show");
+                
+                // Validate form (simplified for demo)
+                const form = $("#addDoctorForm")[0];
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    $("#loadingOverlay").removeClass("show");
+                    return;
+                }
+                
+                // Simulate API call
+                setTimeout(function() {
+                    // Hide modal
+                    $("#addDoctorModal").modal("hide");
+                    
+                    // Reset form
+                    $("#addDoctorForm")[0].reset();
+                    
+                    // Show success toast
+                    showToast("success", "Doctor added successfully!");
+                    
+                    // Hide loading spinner
+                    $("#loadingOverlay").removeClass("show");
+                }, 1000);
+            });
+            
+            // Update Doctor Button
+            $("#updateDoctorBtn").click(function() {
+                // Show loading spinner
+                $("#loadingOverlay").addClass("show");
+                
+                // Validate form (simplified for demo)
+                const form = $("#editDoctorForm")[0];
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    $("#loadingOverlay").removeClass("show");
+                    return;
+                }
+                
+                // Simulate API call
+                setTimeout(function() {
+                    // Hide modal
+                    $("#editDoctorModal").modal("hide");
+                    
+                    // Show success toast
+                    showToast("success", "Doctor updated successfully!");
+                    
+                    // Hide loading spinner
+                    $("#loadingOverlay").removeClass("show");
+                }, 1000);
+            });
+            
+            // Save Supplier Button
+            $("#saveSupplierBtn").click(function() {
+                // Show loading spinner
+                $("#loadingOverlay").addClass("show");
+                
+                // Validate form (simplified for demo)
+                const form = $("#addSupplierForm")[0];
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    $("#loadingOverlay").removeClass("show");
+                    return;
+                }
+                
+                // Simulate API call
+                setTimeout(function() {
+                    // Hide modal
+                    $("#addSupplierModal").modal("hide");
+                    
+                    // Reset form
+                    $("#addSupplierForm")[0].reset();
+                    
+                    // Show success toast
+                    showToast("success", "Supplier added successfully!");
+                    
+                    // Hide loading spinner
+                    $("#loadingOverlay").removeClass("show");
+                }, 1000);
+            });
+            
+            // Update Supplier Button
+            $("#updateSupplierBtn").click(function() {
+                // Show loading spinner
+                $("#loadingOverlay").addClass("show");
+                
+                // Validate form (simplified for demo)
+                const form = $("#editSupplierForm")[0];
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    $("#loadingOverlay").removeClass("show");
+                    return;
+                }
+                
+                // Simulate API call
+                setTimeout(function() {
+                    // Hide modal
+                    $("#editSupplierModal").modal("hide");
+                    
+                    // Show success toast
+                    showToast("success", "Supplier updated successfully!");
+                    
+                    // Hide loading spinner
+                    $("#loadingOverlay").removeClass("show");
+                }, 1000);
+            });
+            
+            // Save Prescription Button
+            $("#savePrescriptionBtn").click(function() {
+                // Show loading spinner
+                $("#loadingOverlay").addClass("show");
+                
+                // Validate form (simplified for demo)
+                const form = $("#addPrescriptionForm")[0];
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    $("#loadingOverlay").removeClass("show");
+                    return;
+                }
+                
+                // Simulate API call
+                setTimeout(function() {
+                    // Hide modal
+                    $("#addPrescriptionModal").modal("hide");
+                    
+                    // Reset form
+                    $("#addPrescriptionForm")[0].reset();
+                    
+                    // Show success toast
+                    showToast("success", "Prescription created successfully!");
+                    
+                    // Hide loading spinner
+                    $("#loadingOverlay").removeClass("show");
+                }, 1000);
+            });
+            
+            // Generate Report Button
+            $("#generateReportBtn").click(function() {
+                // Show loading spinner
+                $("#loadingOverlay").addClass("show");
+                
+                // Simulate API call
+                setTimeout(function() {
+                    // Show success toast
+                    showToast("success", "Report generated successfully!");
+                    
+                    // Hide loading spinner
+                    $("#loadingOverlay").removeClass("show");
+                }, 2000);
+            });
+            
+            // Function to show toast messages
+            function showToast(type, message) {
+                const toast = type === "success" ? $("#successToast") : $("#errorToast");
+                const messageElement = type === "success" ? $("#successToastMessage") : $("#errorToastMessage");
+                
+                messageElement.text(message);
+                
+                const bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+            }
+            
+            // Check if user is already logged in
+            const storedUserInfo = localStorage.getItem("pharmaUserInfo");
+            if (storedUserInfo) {
+                const userInfo = JSON.parse(storedUserInfo);
+                
+                // Hide login page, show app
+                $("#login-page").hide();
+                $("#app-page").show();
+                
+                // Update user info in the UI
+                $("#user-name").text(userInfo.name);
+                $("#user-role").text(userInfo.role);
+            }
+        });
+    </script>
+</body>
+</html>
